@@ -1,0 +1,13 @@
+{
+  "name": "sachcheck-local",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node scripts/start-local.mjs",
+    "test": "node --test tests/live-pipeline.test.mjs"
+  }
+}

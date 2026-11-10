@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Investigate public claims with sources, dates and context you can inspect.">
+  <title>SachCheck — Investigation workspace</title>
+  <link rel="stylesheet" href="/app.css?v=8">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="SachCheck home"><span class="brand-icon">✓</span><span>SachCheck</span></a>
+      <div class="topbar-center"><span class="scope-dot"></span><span>Indian public notices & schemes</span></div>
+      <div class="topbar-actions">
+        <div class="mode-control" role="group" aria-label="Verification mode"><button data-mode="live" class="active"><span></span>Live</button><button data-mode="demo">Demo</button></div>
+        <select id="language" aria-label="Explanation language"><option value="English">English</option><option value="Hindi">हिन्दी</option></select>
+      </div>
+    </header>
+
+    <main>
+      <section id="startView" class="start-view">
+        <div class="start-copy"><span class="eyebrow">EVIDENCE, NOT A SCORE</span><h1>What do you want to check?</h1><p>Paste a forward, headline, public notice, or article URL. SachCheck separates the claims and shows what each source actually establishes.</p></div>
+        <div class="composer" id="composer">
+          <div class="input-tabs" role="tablist"><button class="active" data-input="text">Text</button><button data-input="url">Article URL</button><button data-input="image">Screenshot <span>Beta</span></button></div>
+          <div id="textInputPanel" class="input-panel"><textarea id="claimInput" maxlength="4000" placeholder="Paste a message, headline, or claim…" aria-label="Claim text"></textarea><div class="input-footer"><span id="charCount">0 / 4,000</span><span>English or Hindi</span></div></div>
+          <div id="urlInputPanel" class="input-panel url-input" hidden><span>https://</span><input id="urlInput" type="url" placeholder="example.com/article" aria-label="Article URL"><small>We read the article on the server and show extraction limitations.</small></div>
+          <div id="imageInputPanel" class="input-panel" hidden><label class="image-drop" for="imageInput"><input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp"><span class="upload-glyph">↑</span><strong>Upload a message screenshot</strong><small>PNG, JPG or WEBP · up to 8 MB · text stays editable before checking</small></label><div id="imagePreview" class="image-preview" hidden><img id="previewImage" alt="Uploaded screenshot preview"><div><label for="ocrText">Extracted text <span id="ocrStatus">Not extracted</span></label><textarea id="ocrText" maxlength="4000" placeholder="Extracted text will appear here"></textarea><div class="ocr-actions"><button id="extractImageText" class="primary-button" type="button">Extract text</button><button id="useOcr" class="secondary-button" type="button" disabled>Use as text input</button><button id="replaceImage" class="secondary-button" type="button">Choose another</button></div></div></div></div>
+          <section id="localKeyPanel" class="local-key-panel" hidden aria-label="Local API key setup">
+            <div><span>LOCAL PREVIEW</span><strong>Use your own OpenAI key</strong><small>Held in this tab only. Never saved to the project or browser storage.</small></div>
+            <label for="localOpenAIKey"><span>OpenAI API key</span><div class="local-key-input"><input id="localOpenAIKey" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false"><button id="toggleLocalKey" type="button">Show</button></div><small id="localKeyStatus">Enter a key to enable Live checks on localhost.</small></label>
+          </section>
+          <div id="composerMessage" class="composer-message" hidden></div>
+          <div class="composer-actions"><p><strong>Supported:</strong> government announcements, scheme eligibility, amounts, dates and geographic scope.</p><button id="checkButton" class="primary-button" disabled><span>Check claims</span><b>→</b></button></div>
+        </div>
+        <div class="examples"><div class="examples-head"><span>TRY A BUNDLED DEMO</span><p>Fictional sources · clearly labelled · no web search</p></div><div class="example-grid"><button data-example="amount"><span>AMOUNT + ELIGIBILITY</span><strong>“Every student in India will get ₹25,000…”</strong></button><button data-example="expired"><span>OUTDATED NOTICE</span><strong>“Applications are open now…”</strong></button><button data-example="accurate"><span>SUPPORTED CLAIM</span><strong>“Eligible students may receive ₹8,000…”</strong></button></div></div>
+        <div class="state-gallery" aria-label="How SachCheck handles uncertainty"><div><span class="state-icon">◌</span><strong>No checkable claim</strong><p>Opinions and vague predictions are separated from factual claims.</p></div><div><span class="state-icon">!</span><strong>Insufficient evidence</strong><p>No search result is treated as proof that a claim is false.</p></div><div><span class="state-icon">×</span><strong>Source unavailable</strong><p>Blocked or unreadable pages remain visible as retrieval limits.</p></div></div>
+      </section>
+
+      <section id="loadingView" class="loading-view" hidden aria-live="polite">
+        <div class="loading-shell">
+          <header class="loading-card"><div class="loader-mark" aria-hidden="true"><span></span><span></span><span></span></div><div><span id="loadingStepNumber">LIVE INVESTIGATION · STEP 1 OF 5</span><h2 id="loadingTitle">Extracting checkable claims</h2><p id="loadingDetail">Separating factual statements from opinion and emphasis.</p></div><button id="cancelButton">Cancel check</button></header>
+          <div class="loading-progress" aria-hidden="true"><span id="loadingProgressBar"></span></div>
+          <div class="loading-body">
+            <section class="loading-focus"><span class="loading-label">SUBMITTED FOR REVIEW</span><blockquote id="loadingInputPreview">Your claim will appear here.</blockquote><div class="loading-signals"><span><b></b>Live web evidence</span><span>↗ Original sources</span><span>✓ Citations validated</span></div><p>Longer checks can take up to a minute while sources are opened and compared.</p></section>
+            <aside class="loading-activity"><div><span>INVESTIGATION LOG</span><strong id="loadingElapsed">Just started</strong></div><ol class="loading-steps"><li class="active"><i>1</i><span>Extract claims<small>Identify factual statements</small></span></li><li><i>2</i><span>Search evidence<small>Prioritise primary sources</small></span></li><li><i>3</i><span>Read sources<small>Capture dates and passages</small></span></li><li><i>4</i><span>Compare details<small>Check support and conflict</small></span></li><li><i>5</i><span>Prepare report<small>Validate every citation</small></span></li></ol></aside>
+          </div>
+          <footer class="loading-note"><span class="privacy-dot"></span><span>Your key is used only for this check and is not stored.</span></footer>
+        </div>
+      </section>
+
+      <section id="stateView" class="state-view" hidden>
+        <div class="state-card"><span id="stateCode">LIVE MODE</span><div id="stateIcon" class="state-big-icon">⌁</div><h2 id="stateTitle">Live verification needs credentials</h2><p id="stateDescription"></p><div id="stateDetails" class="state-details"></div><div class="state-actions"><button id="stateBack" class="secondary-button">Back to input</button><button id="useDemo" class="primary-button">Try fictional demo</button></div></div>
+      </section>
+
+      <section id="workspaceView" class="workspace-view" hidden>
+        <div class="workspace-header"><div class="workspace-header-inner"><div class="workspace-identity"><button id="newCheck" class="back-button">← New check</button><span id="workspaceMode" class="mode-badge">Live verification</span></div><div class="workspace-actions"><button id="copySummary">Copy summary</button><button id="shareReport">Share</button></div></div></div>
+        <div class="report-shell">
+          <main class="report-main">
+            <section class="submitted-claim">
+              <div class="report-section-heading"><h1>Original submission</h1><span id="claimCount">1 claim identified</span></div>
+              <blockquote id="submittedText"></blockquote>
+            </section>
+            <section class="claim-selector" aria-label="Extracted claims">
+              <h2>Claims</h2>
+              <div id="claimList" class="claim-list"></div>
+            </section>
+            <section class="finding-pane"><div id="findingContent"></div></section>
+            <details class="report-details">
+              <summary>Report details</summary>
+              <dl><div><dt>Report</dt><dd id="workspaceTitle">—</dd></div><div><dt>Evidence coverage</dt><dd id="coverageText">—</dd></div><div><dt>Language</dt><dd id="inputLanguage">English</dd></div><div><dt>Analysed</dt><dd id="analysisTime">—</dd></div></dl>
+            </details>
+          </main>
+          <aside class="evidence-pane">
+            <div class="sources-heading"><div><h2>Sources</h2><p>Evidence cited for the selected claim</p></div><span id="sourceCount" class="count-pill">0</span></div>
+            <div class="evidence-filter" role="group" aria-label="Evidence relationship"><button class="active" data-filter="all">All</button><button data-filter="Supports">Supports</button><button data-filter="Contradicts">Contradicts</button><button data-filter="Context">Context</button></div>
+            <div id="evidenceList" class="evidence-list"></div>
+            <div id="retrievalNote" class="retrieval-note"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+    <footer><span>Findings depend on available evidence and may be incomplete.</span><span>SachCheck does not conclusively detect all misinformation.</span></footer>
+  </div>
+  <script src="/app.js?v=9"></script>
+</body>
+</html>
