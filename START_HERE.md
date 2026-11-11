@@ -47,6 +47,16 @@ The API key is held only in the current browser tab. It is not written to this f
 npm test
 ```
 
+ deployment
+
+- Public URL: <https://sachcheck.sachcheck.workers.dev>
+- Worker name: sachcheck
+- Cloudflare version: 159a6d16-66fb-475c-a157-cf6bcf3e9e6f
+- Deployment date: 11 November 2026
+- Verified: homepage, /api/config, fictional demo source, and the complete bundled Demo report
+- Current credential state: Demo mode is available; Live mode remains disabled until a fresh OPENAI_API_KEY secret is added
+
+
 ## Troubleshooting
 
 - **`node` or `npm` is not recognized:** install Node.js 22 or newer, then reopen the terminal.

@@ -4,6 +4,15 @@ SachCheck is a local fact-checking workspace. You submit a message, claim, artic
 
 The application runs on your own computer at `http://127.0.0.1:4173`. Nothing is deployed automatically.
 
+ deployment
+
+- Public URL: <https://sachcheck.sachcheck.workers.dev>
+- Worker name: sachcheck
+- Cloudflare version: 159a6d16-66fb-475c-a157-cf6bcf3e9e6f
+- Deployment date: 11 November 2026
+- Verified: homepage, /api/config, fictional demo source, and the complete bundled Demo report
+- Current credential state: Demo mode is available; Live mode remains disabled until a fresh OPENAI_API_KEY secret is added
+
 ## Fast start on Windows
 
 ### 1. Install Node.js
@@ -18,9 +27,7 @@ node --version
 
 The version should be `v22.13.0` or newer. If Windows says that `node` is not recognized, close and reopen PowerShell after installing Node.js.
 
-### 2. Extract the ZIP
 
-Right-click `SachCheck-local.zip`, choose **Extract All**, and open the extracted `SachCheck` folder. Do not run the project from inside the ZIP preview.
 
 ### 3. Start SachCheck
 
