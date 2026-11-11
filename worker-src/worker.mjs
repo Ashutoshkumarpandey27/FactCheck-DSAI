@@ -1,7 +1,6 @@
 /*__ASSETS__*/
 
 const json = (value, status = 200) => new Response(JSON.stringify(value), {status, headers: {'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store'}});
-
 const text = (value, type = 'text/plain; charset=utf-8') => new Response(value, {headers: {'content-type': type, 'cache-control': 'public, max-age=300'}});
 const timeout = (ms) => AbortSignal.timeout(ms);
 const localHosts = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
